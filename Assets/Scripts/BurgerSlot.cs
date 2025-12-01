@@ -41,7 +41,16 @@ public class BurgerSlot : MonoBehaviour
     {
         if (piece == null) return false;
         if (acceptedPiece != null) return false; // occupied
+        if (piece.IsPlaced) return false; // piece already placed in another slot
         if (!string.IsNullOrEmpty(expectedPieceId) && piece.pieceId != expectedPieceId) return false;
+
+        // Require the piece to be within the manager's autoSnapRadius (avoid accidental early invokes)
+        float maxRadius = 0.12f;
+        if (BurgerAssemblyManager.Instance != null) maxRadius = BurgerAssemblyManager.Instance.autoSnapRadius;
+
+        Vector3 pieceAnchorPos = (piece.snapAnchor != null) ? piece.snapAnchor.position : piece.transform.position;
+        float dist = Vector3.Distance(pieceAnchorPos, GetSnapPosition());
+        if (dist > maxRadius) return false;
 
         acceptedPiece = piece;
         piece.SnapToSlot(this);
