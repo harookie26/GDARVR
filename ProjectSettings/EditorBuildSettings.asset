@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainLevel.unity
     guid: 25161d3ef4736be4c9c2ee69d4bf3eee
+  - enabled: 0
+    path: Assets/Scenes/RayTestingScene.unity
+    guid: d895f97a1f3c41f4489ae2af1281cf8c
   m_configObjects:
     UnityEditor.XR.ARCore.ARCoreSettings: {fileID: 11400000, guid: 7b5b83f8c7adc644da116cb1a481efcb, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}
