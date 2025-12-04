@@ -67,18 +67,30 @@ public class BurgerPiece : MonoBehaviour
     // Example: XRGrabInteractable.onSelectExited -> call this, then Ask manager to attempt placement.
     public void OnReleasedByPlayer()
     {
-        // Find nearest slot and attempt placement
-        var manager = BurgerAssemblyManager.Instance;
-        if (manager == null) return;
+    }
 
-        var nearest = manager.FindNearestSlot(transform.position, manager.autoSnapRadius);
-        if (nearest != null)
+    private void OnTriggerEnter(Collider other)
+    {
+        var otherPiece = other.GetComponent<ISnappable>();
+
+        if(otherPiece != null && IsPlaced == false)
         {
-            // If TryPlace returns false, the piece remains free (player keeps it)
-            if (!nearest.TryPlace(this))
-            {
-                // optional: small feedback (sound/haptic)
-            }
+            var ID = GetComponent<BurgerPieceID>();
+            var burgerID = ID.GetPieceID();
+            otherPiece.SnapToSlot(this, burgerID);
+            IsPlaced = true;
+        }
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        var otherPiece = other.GetComponent<ISnappable>();
+
+        if (otherPiece != null && IsPlaced == true)
+        {
+            otherPiece.ReleaseFromSlot();
+            transform.SetParent(null);
+            IsPlaced = false;
         }
     }
 }

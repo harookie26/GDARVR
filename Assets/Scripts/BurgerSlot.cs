@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.Events;
 
 [RequireComponent(typeof(Collider))]
-public class BurgerSlot : MonoBehaviour
+public class BurgerSlot : MonoBehaviour, ISnappable
 {
     [Tooltip("Index in the stack: 0 = bottom, increasing upwards.")]
     public int slotIndex = 0;
@@ -13,11 +13,16 @@ public class BurgerSlot : MonoBehaviour
     [Tooltip("Local transform used as the exact snap position/rotation.")]
     public Transform snapAnchor;
 
+    private GameObject anchor;
+
     [HideInInspector]
     public BurgerPiece acceptedPiece;
 
     public UnityEvent onPiecePlaced;
     public UnityEvent onPieceRemoved;
+
+    public string burgerID;
+    bool IsSnapped = false;
 
     void Reset()
     {
@@ -36,36 +41,41 @@ public class BurgerSlot : MonoBehaviour
         return (snapAnchor != null) ? snapAnchor.rotation : transform.rotation;
     }
 
-    // Try to accept a piece into this slot. Returns true if accepted.
-    public bool TryPlace(BurgerPiece piece)
-    {
-        if (piece == null) return false;
-        if (acceptedPiece != null) return false; // occupied
-        if (piece.IsPlaced) return false; // piece already placed in another slot
-        if (!string.IsNullOrEmpty(expectedPieceId) && piece.pieceId != expectedPieceId) return false;
-
-        // Require the piece to be within the manager's autoSnapRadius (avoid accidental early invokes)
-        float maxRadius = 0.12f;
-        if (BurgerAssemblyManager.Instance != null) maxRadius = BurgerAssemblyManager.Instance.autoSnapRadius;
-
-        Vector3 pieceAnchorPos = (piece.snapAnchor != null) ? piece.snapAnchor.position : piece.transform.position;
-        float dist = Vector3.Distance(pieceAnchorPos, GetSnapPosition());
-        if (dist > maxRadius) return false;
-
-        acceptedPiece = piece;
-        piece.SnapToSlot(this);
-        onPiecePlaced?.Invoke();
-        BurgerAssemblyManager.Instance?.RegisterPlacement(this);
-        return true;
-    }
+    
+    
 
     public void Clear()
     {
-        if (acceptedPiece != null)
+        //if (acceptedPiece != null)
+        //{
+        //    onPieceRemoved?.Invoke();
+        //    acceptedPiece = null;
+        //    BurgerAssemblyManager.Instance?.RegisterRemoval(this);
+        //}
+    }
+
+    public void SnapToSlot(BurgerPiece ID, string burgerID)
+    {
+        if(IsSnapped) return;
+        IsSnapped = true;
+        var obj = ID.transform.gameObject;
+        this.burgerID = burgerID;
+
+        obj.transform.position = transform.position;
+        if (this.anchor == null)
         {
-            onPieceRemoved?.Invoke();
-            acceptedPiece = null;
-            BurgerAssemblyManager.Instance?.RegisterRemoval(this);
+            var anchor = new GameObject("Anchor");
+            this.anchor = anchor;
         }
+        anchor.transform.SetParent(transform);
+        obj.transform.SetParent(anchor.transform);
+    }
+
+    public void ReleaseFromSlot()
+    {
+        if(!IsSnapped) return;
+        IsSnapped = false;
+        burgerID = null;
+
     }
 }
