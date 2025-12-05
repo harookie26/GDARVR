@@ -124,7 +124,7 @@ public class BurgerAssemblyManager : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
 
-        completed = true;
+        completed = false;
 
         if (CompletedText != null)
         {
