@@ -8,13 +8,11 @@ public class BurgerAssemblyManager : MonoBehaviour
 {
     public static BurgerAssemblyManager Instance { get; private set; }
 
-    [Tooltip("Ordered list of slots from bottom (index 0) to top.")]
-    public List<BurgerSlot> slots = new List<BurgerSlot>();
-
     [Tooltip("Recipe that defines expected piece IDs per slot.")]
     public BurgerRecipe recipe;
 
-    
+    [Tooltip("Defines the desired slot order (indices bottom-to-top).")]
+    public BurgerSlotOrder slotOrder;
 
     [Tooltip("Event invoked when the burger is correctly assembled.")]
     public UnityEvent onBurgerCompleted;
@@ -27,6 +25,8 @@ public class BurgerAssemblyManager : MonoBehaviour
     
     public TMPro.TextMeshProUGUI scoreText;
 
+    private List<BurgerSlot> orderedSlots = new List<BurgerSlot>();
+
     void Awake()
     {
         if (Instance != null && Instance != this) Destroy(this);
@@ -35,24 +35,48 @@ public class BurgerAssemblyManager : MonoBehaviour
 
     void Start()
     {
-        // Basic sanity: if we have a recipe, ensure slots length matches (warn only)
-        if (recipe != null && recipe.pieceIds.Count != slots.Count)
-            Debug.LogWarning($"Recipe pieces ({recipe.pieceIds.Count}) != slots ({slots.Count}).");
+        BuildOrderedSlotsFromOrderAsset();
+
+        if (recipe != null && recipe.pieceIds.Count != orderedSlots.Count)
+            Debug.LogWarning($"Recipe pieces ({recipe.pieceIds.Count}) != slots ({orderedSlots.Count}).");
     }
 
-    
+    private void BuildOrderedSlotsFromOrderAsset()
+    {
+        var allSlots = FindObjectsOfType<BurgerSlot>(includeInactive: true);
+        var byIndex = allSlots.GroupBy(s => s.slotIndex).ToDictionary(g => g.Key, g => g.First());
 
-    
+        orderedSlots.Clear();
+
+        if (slotOrder == null || slotOrder.slotIndex == null || slotOrder.slotIndex.Count == 0)
+        {
+            Debug.LogWarning("BurgerSlotOrder is not assigned or empty. Falling back to sorting by slotIndex found in scene.");
+            orderedSlots = allSlots.OrderBy(s => s.slotIndex).ToList();
+            return;
+        }
+
+        foreach (var idx in slotOrder.slotIndex)
+        {
+            if (byIndex.TryGetValue(idx, out var slot))
+            {
+                orderedSlots.Add(slot);
+            }
+            else
+            {
+                Debug.LogWarning($"BurgerSlotOrder references slotIndex {idx} but no BurgerSlot with that index exists in the scene.");
+            }
+        }
+    }
 
     void ValidateAssembly()
     {
 
-        if (recipe != null && recipe.pieceIds.Count == slots.Count)
+        if (recipe != null && recipe.pieceIds.Count == orderedSlots.Count)
         {
-            for (int i = 0; i < slots.Count; i++)
+            for (int i = 0; i < orderedSlots.Count; i++)
             {
                 var expected = recipe.pieceIds[i];
-                var actual = slots[i].burgerID;
+                var actual = orderedSlots[i].burgerID;
                 if (expected != actual)
                 {
                     // incorrect order or wrong piece
@@ -61,7 +85,6 @@ public class BurgerAssemblyManager : MonoBehaviour
             }
         }
 
-        // All checks passed
         CompleteBurger();
     }
 
@@ -79,19 +102,19 @@ public class BurgerAssemblyManager : MonoBehaviour
 
     }
 
-   
-
-    // Reset manager for replays (not destroying pieces)
     public void ResetAssembly()
     {
-        
-        
+        BuildOrderedSlotsFromOrderAsset();
+        completed = false;
     }
 
 
     private void Update()
     {
-        scoreText.text = "Score: " + score.ToString();
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString();
+        }
         ValidateAssembly();
     }
 }
