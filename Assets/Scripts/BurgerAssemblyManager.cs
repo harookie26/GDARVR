@@ -29,6 +29,8 @@ public class BurgerAssemblyManager : MonoBehaviour
 
     private List<BurgerSlot> orderedSlots = new List<BurgerSlot>();
 
+    private CheckpointManager cp => FindFirstObjectByType<CheckpointManager>();
+
     private Timer gameTimer => FindFirstObjectByType<Timer>();
 
     private bool TimerRunning = false;
@@ -118,8 +120,8 @@ public class BurgerAssemblyManager : MonoBehaviour
             scoreText.text = "Score: " + score.ToString();
         }
 
-        gameTimer.StopTime();
-
+        // gameTimer.StopTime();
+        cp.LoadCheckpoint();
     }
 
     public void ResetAssembly()

@@ -27,4 +27,23 @@ public class CheckpointManager : MonoBehaviour
         // Ensure data is written to disk
         PlayerPrefs.Save();
     }
+
+    public void LoadCheckpoint()
+    {
+        // Retrieve the count of burger pieces
+        int count = PlayerPrefs.GetInt("Checkpoint_BurgerPiece_Count", 0);
+        // Load each transform position
+        for (int i = 0; i < count; i++)
+        {
+            float x = PlayerPrefs.GetFloat($"Checkpoint_BurgerPiece_{i}_x", 0f);
+            float y = PlayerPrefs.GetFloat($"Checkpoint_BurgerPiece_{i}_y", 0f);
+            float z = PlayerPrefs.GetFloat($"Checkpoint_BurgerPiece_{i}_z", 0f);
+            // Find the corresponding burger piece
+            GameObject burgerPiece = GameObject.FindGameObjectsWithTag("Burger Piece")[i];
+            if (burgerPiece != null)
+            {
+                burgerPiece.transform.position = new Vector3(x, y, z);
+            }
+        }
+    }
 }
