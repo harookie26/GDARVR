@@ -1,0 +1,17 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c17e097606dabaa47814856dc933b7c9, type: 3}
+  m_Name: BurgerSet1
+  m_EditorClassIdentifier: 
+  recipe: {fileID: 11400000, guid: 41b16e9fa92f4ee4eb35cef7909d558e, type: 2}
+  slotOrder: {fileID: 11400000, guid: 4481d53ddeb9c744b9e4e8c0b4d40597, type: 2}
+  burgerPrefab: {fileID: 5555685876222475078, guid: 6e5e1434584cc2046897a8edfcccf259, type: 3}

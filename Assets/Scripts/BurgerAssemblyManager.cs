@@ -1,8 +1,9 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using TMPro;
 
 public class BurgerAssemblyManager : MonoBehaviour
 {
@@ -14,12 +15,16 @@ public class BurgerAssemblyManager : MonoBehaviour
     [Tooltip("Defines the desired slot order (indices bottom-to-top).")]
     public BurgerSlotOrder slotOrder;
 
+    public List<BurgerSet> burgerSet;
+
+    private BurgerSet activeSet;
+
     [Tooltip("Event invoked when the burger is correctly assembled.")]
     public UnityEvent onBurgerCompleted;
 
     public GameObject CompletedText;
 
-    [SerializeField] private GameObject gameOverUI;
+    [SerializeField] private GameObject gameCompleteText;
 
     public bool completed = false;
 
@@ -36,6 +41,9 @@ public class BurgerAssemblyManager : MonoBehaviour
     private bool TimerRunning = false;
     private bool gameOver = false;
 
+    [SerializeField] private GameObject burgerModel1;
+    [SerializeField] private GameObject burgerModel2;
+
     void Awake()
     {
         if (Instance != null && Instance != this) Destroy(this);
@@ -46,14 +54,20 @@ public class BurgerAssemblyManager : MonoBehaviour
     {
         BuildOrderedSlotsFromOrderAsset();
 
+        activeSet = burgerSet[0];
+
+        recipe = activeSet.recipe;
+        slotOrder = activeSet.slotOrder;
+
         if (recipe != null && recipe.pieceIds.Count != orderedSlots.Count)
             Debug.LogWarning($"Recipe pieces ({recipe.pieceIds.Count}) != slots ({orderedSlots.Count}).");
 
-        gameOverUI.SetActive(false);
         if (scoreText != null)
         {
             scoreText.text = "Score: " + score.ToString();
         }
+
+        CompletedText.SetActive(false);
 
     }
 
@@ -101,27 +115,28 @@ public class BurgerAssemblyManager : MonoBehaviour
             }
         }
 
-        CompleteBurger();
+        StartCoroutine(CompleteBurgerCoroutine());
     }
 
-    void CompleteBurger()
+    private IEnumerator CompleteBurgerCoroutine()
     {
         completed = true;
 
-
         onBurgerCompleted?.Invoke();
-        if (CompletedText != null)
-        {
-            CompletedText.SetActive(true);
-        }
-        score++;
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + score.ToString();
-        }
 
-        // gameTimer.StopTime();
+        if (CompletedText != null) CompletedText.SetActive(true);
+
+        score++;
+
+        if (scoreText != null) scoreText.text = "Score: " + score.ToString();
+
+        yield return new WaitForSeconds(2f);
+
+        if (CompletedText != null) CompletedText.SetActive(false);
+
+        completed = false;
         cp.LoadCheckpoint();
+        RandomizeBurgerSet();
     }
 
     public void ResetAssembly()
@@ -130,6 +145,29 @@ public class BurgerAssemblyManager : MonoBehaviour
         completed = false;
     }
 
+    private void RandomizeBurgerSet()
+    {
+        activeSet = burgerSet[Random.Range(0, burgerSet.Count - 1)];
+    }
+
+    private void SetActiveBurgerModel()
+    {
+        int index = burgerSet.IndexOf(activeSet);
+
+        switch (index)
+        {
+            case 0:
+                burgerModel1.SetActive(true);
+                burgerModel2.SetActive(false);
+                break;
+            case 1:
+                burgerModel1.SetActive(false);
+                burgerModel2.SetActive(true);
+                break;
+            default:
+                break;
+        }
+    }
 
     private void Update()
     {
@@ -142,7 +180,9 @@ public class BurgerAssemblyManager : MonoBehaviour
         if (gameOver)
         {
             Time.timeScale = 0.000001f;
-            gameOverUI.SetActive(true);
+            CompletedText.SetActive(true);
         }
+
+        SetActiveBurgerModel();
     }
 }
