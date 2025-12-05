@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System.Collections;
+
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
@@ -50,6 +52,7 @@ public class BurgerAssemblyManager : MonoBehaviour
             Debug.LogWarning($"Recipe pieces ({recipe.pieceIds.Count}) != slots ({orderedSlots.Count}).");
 
         gameOverUI.SetActive(false);
+        CompletedText.SetActive(false);
         if (scoreText != null)
         {
             scoreText.text = "Score: " + score.ToString();
@@ -101,13 +104,12 @@ public class BurgerAssemblyManager : MonoBehaviour
             }
         }
 
-        CompleteBurger();
+        StartCoroutine(CompleteBurger());
     }
 
-    void CompleteBurger()
+    IEnumerator CompleteBurger()
     {
         completed = true;
-
 
         onBurgerCompleted?.Invoke();
         if (CompletedText != null)
@@ -120,7 +122,15 @@ public class BurgerAssemblyManager : MonoBehaviour
             scoreText.text = "Score: " + score.ToString();
         }
 
-        // gameTimer.StopTime();
+        yield return new WaitForSeconds(1f);
+
+        completed = true;
+
+        if (CompletedText != null)
+        {
+            CompletedText.SetActive(false);
+        }
+
         cp.LoadCheckpoint();
     }
 
