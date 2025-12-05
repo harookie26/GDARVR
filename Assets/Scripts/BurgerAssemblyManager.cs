@@ -19,13 +19,20 @@ public class BurgerAssemblyManager : MonoBehaviour
 
     public GameObject CompletedText;
 
-    bool completed = false;
+    [SerializeField] private GameObject gameOverUI;
+
+    public bool completed = false;
 
     public int score = 0; 
     
     public TMPro.TextMeshProUGUI scoreText;
 
     private List<BurgerSlot> orderedSlots = new List<BurgerSlot>();
+
+    private Timer gameTimer => FindFirstObjectByType<Timer>();
+
+    private bool TimerRunning = false;
+    private bool gameOver = false;
 
     void Awake()
     {
@@ -39,6 +46,13 @@ public class BurgerAssemblyManager : MonoBehaviour
 
         if (recipe != null && recipe.pieceIds.Count != orderedSlots.Count)
             Debug.LogWarning($"Recipe pieces ({recipe.pieceIds.Count}) != slots ({orderedSlots.Count}).");
+
+        gameOverUI.SetActive(false);
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString();
+        }
+
     }
 
     private void BuildOrderedSlotsFromOrderAsset()
@@ -68,7 +82,7 @@ public class BurgerAssemblyManager : MonoBehaviour
         }
     }
 
-    void ValidateAssembly()
+    public void ValidateAssembly()
     {
 
         if (recipe != null && recipe.pieceIds.Count == orderedSlots.Count)
@@ -99,6 +113,12 @@ public class BurgerAssemblyManager : MonoBehaviour
             CompletedText.SetActive(true);
         }
         score++;
+        if (scoreText != null)
+        {
+            scoreText.text = "Score: " + score.ToString();
+        }
+
+        gameTimer.StopTime();
 
     }
 
@@ -111,10 +131,16 @@ public class BurgerAssemblyManager : MonoBehaviour
 
     private void Update()
     {
-        if (scoreText != null)
+
+        TimerRunning = gameTimer.GetTimerRunning();
+        gameOver = gameTimer.GetGameOver();
+
+        if (!TimerRunning) Time.timeScale = 0.00000001f;
+
+        if (gameOver)
         {
-            scoreText.text = "Score: " + score.ToString();
+            Time.timeScale = 0.000001f;
+            gameOverUI.SetActive(true);
         }
-        ValidateAssembly();
     }
 }

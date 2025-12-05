@@ -69,6 +69,9 @@ public class BurgerSlot : MonoBehaviour, ISnappable
         }
         anchor.transform.SetParent(transform);
         obj.transform.SetParent(anchor.transform);
+
+        if(!BurgerAssemblyManager.Instance.completed)
+            BurgerAssemblyManager.Instance.ValidateAssembly();
     }
 
     public void ReleaseFromSlot()
