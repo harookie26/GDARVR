@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Burger
   m_EditorClassIdentifier: 
   pieceIds:
-  - 1
-  - 2
-  - 3
-  - 4
-  - 5
+  - lettuce
+  - patty
+  - onion
+  - cheese
+  - topbun

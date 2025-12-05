@@ -1102,8 +1102,8 @@ MonoBehaviour:
   - {fileID: 814513270}
   - {fileID: 326677914}
   - {fileID: 2040481086}
-  - {fileID: 989394391}
   - {fileID: 1230715606}
+  - {fileID: 989394391}
   recipe: {fileID: 11400000, guid: 34b39a8887528254a9180c22796388d1, type: 2}
   onBurgerCompleted:
     m_PersistentCalls:
@@ -3310,6 +3310,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 967620281710452598, guid: 2efdb0993fb713e4d8a479f9f6300144, type: 3}
+      propertyPath: m_Name
+      value: SAOnion
+      objectReference: {fileID: 0}
+    - target: {fileID: 4841758990208142356, guid: 2efdb0993fb713e4d8a479f9f6300144, type: 3}
+      propertyPath: pieceId
+      value: onion
+      objectReference: {fileID: 0}
     - target: {fileID: 7782521616377602375, guid: 2efdb0993fb713e4d8a479f9f6300144, type: 3}
       propertyPath: _movementProvider
       value: 
@@ -3430,6 +3438,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8711177425682171408, guid: 99833c4b7a0a8d841889acbfda6a55e3, type: 3}
+      propertyPath: pieceId
+      value: topbun
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3486,6 +3498,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4433230548211822453, guid: 9c324a88bc27fbf478bdc654069a498b, type: 3}
+      propertyPath: pieceId
+      value: lettuce
+      objectReference: {fileID: 0}
     - target: {fileID: 7080886853166129728, guid: 9c324a88bc27fbf478bdc654069a498b, type: 3}
       propertyPath: m_Name
       value: '[BuildingBlock] Lettuce'
@@ -3498,6 +3514,10 @@ PrefabInstance:
       propertyPath: _pointableElement
       value: 
       objectReference: {fileID: 1922957038}
+    - target: {fileID: 9066429958162913473, guid: 9c324a88bc27fbf478bdc654069a498b, type: 3}
+      propertyPath: m_Name
+      value: SALettuce
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3554,9 +3574,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2148064707599774339, guid: 6c62125bbf03e1546a8660367498abdd, type: 3}
+      propertyPath: m_Name
+      value: SAPatty
+      objectReference: {fileID: 0}
     - target: {fileID: 4745156886506659549, guid: 6c62125bbf03e1546a8660367498abdd, type: 3}
       propertyPath: m_Name
       value: '[BuildingBlock] Patty'
+      objectReference: {fileID: 0}
+    - target: {fileID: 7501078231661974735, guid: 6c62125bbf03e1546a8660367498abdd, type: 3}
+      propertyPath: pieceId
+      value: patty
       objectReference: {fileID: 0}
     - target: {fileID: 9089696773712482283, guid: 6c62125bbf03e1546a8660367498abdd, type: 3}
       propertyPath: _movementProvider
@@ -3669,6 +3697,14 @@ PrefabInstance:
     - target: {fileID: 2020321827322120670, guid: e3a1149752711e04dbea8fdb288f262e, type: 3}
       propertyPath: m_Name
       value: '[BuildingBlock] Cheese'
+      objectReference: {fileID: 0}
+    - target: {fileID: 3993372181646442898, guid: e3a1149752711e04dbea8fdb288f262e, type: 3}
+      propertyPath: m_Name
+      value: SACheese
+      objectReference: {fileID: 0}
+    - target: {fileID: 5736126427656912927, guid: e3a1149752711e04dbea8fdb288f262e, type: 3}
+      propertyPath: pieceId
+      value: cheese
       objectReference: {fileID: 0}
     - target: {fileID: 7286248621955467754, guid: e3a1149752711e04dbea8fdb288f262e, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3883,6 +3919,10 @@ PrefabInstance:
     - target: {fileID: 2445774638981082201, guid: 165cf7d55309d404880b4408189f5999, type: 3}
       propertyPath: m_Name
       value: '[BuildingBlock] Bottom Bun'
+      objectReference: {fileID: 0}
+    - target: {fileID: 6603999266419916473, guid: 165cf7d55309d404880b4408189f5999, type: 3}
+      propertyPath: m_Name
+      value: SABottomBun
       objectReference: {fileID: 0}
     - target: {fileID: 8257783671726871462, guid: 165cf7d55309d404880b4408189f5999, type: 3}
       propertyPath: _movementProvider
